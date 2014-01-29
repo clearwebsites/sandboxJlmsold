@@ -1,0 +1,132 @@
+/*main css*/
+body{
+	background-color: #fcf2e4;
+	margin: 2px;
+	margin-top: 2px;
+	padding: 5px;
+	font-family: "Times New Roman";
+	font-style: bold;
+}
+#headerimg{
+	width: 200px;
+	height: 91px;
+
+}
+#mainNav{
+	float: left;
+	margin-top: 5px;
+	margin-left: 350px;
+	margin-bottom: 75px;
+	padding: 0px;
+	display: none;
+}
+
+/*item desc page*/
+#content{
+	width: 100%; 
+	margin-top: 110px; 
+	float: none;
+}
+#descImg{
+	float: left;
+	width: 600px;
+	height: 300px;
+	margin-left: 10px;
+
+} 
+.descImg{
+	width:600px;
+	height: 285px;
+}
+
+#descList{
+	float: left;
+	display: inline;
+	width: 600px;
+	height: 100%;
+	margin-left: 10px;
+}
+/*footer and side*/
+#side{
+	display: none;
+}
+#printside{
+	position: absolute;
+	right: 240px;
+	display: inline;
+	top: 0px;
+	
+}
+#owners{
+	position: absolute;
+	right: 20px;
+	display: inline;
+	top: 5px;
+	
+	
+}
+#owners img{
+	display: none;
+}
+#footer{
+
+	display: inline;
+}
+/*.footer{
+	width: 200px;
+}*/
+#footer fieldset{
+	
+	border: none;
+	display: inline;
+	width: 95%;
+	margin-top: 10px;
+}
+#footerInfo{
+	
+	position: relative;
+	left: 5px;
+	bottom: 10px;
+}
+#footer img{
+	
+	float: left;
+	padding-top: 2px;
+	margin-left: 10px;
+}
+#jFoot{
+	
+	margin-left: 10px;
+	float: left;
+	text-align: center;
+}
+#dFoot{
+	
+	float: left;
+	display: inline;
+	text-align: center;
+	margin-left: 10px;
+}
+#mlsimg{
+	position: absolute;
+	width: 85px; height: 40px;
+	margin: 5px;
+	right: 40px;
+
+}
+#equalimg{
+	position: absolute;
+	width: 75px; height: 50;
+	margin: 5px;
+	right: 150px;
+}
+.back{
+	display: none;
+}
+.print{
+	display: none;
+}
+
+#more{
+	display: none;
+}
