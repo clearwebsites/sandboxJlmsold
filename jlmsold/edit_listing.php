@@ -7,68 +7,78 @@
  ?>
 <?php 	
 if (isset($_POST['submit'])) {
+	$id=$_GET['id'];
+	$type= mysql_prep($_POST["type"]);
+	$address = mysql_prep($_POST["address"]);
+	$city = mysql_prep($_POST["city"]);
+	$county = mysql_prep($_POST["county"]);
+	$zip = $_POST["zip"];
+	$region = mysql_prep($_POST["region"]);
+	$price = $_POST["price"];
+	$bedrooms = mysql_prep($_POST["bedrooms"]);
+	$bathrooms = mysql_prep($_POST["bathrooms"]);
+	$schools = mysql_prep($_POST["school_dist"]);
+	$sq_ft = mysql_prep($_POST["sq_ft"]);
+	$lot = mysql_prep($_POST["lot_size"]);
+	$year = mysql_prep($_POST["year_built"]);
+	$hoa = $_POST["hoa"];
+	$taxes = mysql_prep($_POST["taxes"]);
+	$status = $_POST["status"];
+	$full_desc = mysql_prep($_POST["full_desc"]);
+	$visible = $_POST["visible"];
+	$perAc = $_POST["perAc"];
 	$address = mysql_prep($_POST["address"]);
 	$addressFile = str_replace(" ", "-", $address);
 	$fileName = str_replace(" ", "-", $_FILES['file']['name']);
-	$allowedExts = array("gif", "jpeg", "jpg", "png");
+	$allowedExts = array("gif", "jpeg", "jpg","JPG", "png");
 	$temp = explode(".", $_FILES["file"]["name"]);
 	$extension = end($temp);
 	if ((($_FILES["file"]["type"] == "image/gif")
 	|| ($_FILES["file"]["type"] == "image/jpeg")
 	|| ($_FILES["file"]["type"] == "image/jpg")
+	|| ($_FILES["file"]["type"] == "image/JPG")
 	|| ($_FILES["file"]["type"] == "image/pjpeg")
 	|| ($_FILES["file"]["type"] == "image/x-png")
 	|| ($_FILES["file"]["type"] == "image/png"))
-	&& ($_FILES["file"]["size"] < 2000000)
+	&& ($_FILES["file"]["size"] < 5000000)
 	&& in_array($extension, $allowedExts)){
+		$invalid = "";
 		if ($_FILES["file"]["error"] > 0){
 			//echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
 		}else{
-			echo "Upload: " . $fileName . "<br>";
-			echo "Type: " . $_FILES["file"]["type"] . "<br>";
-			echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
-			echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
+			$upload = $fileName;
+			$imagetype = $_FILES["file"]["type"];
+			$size = ($_FILES["file"]["size"] / 1024) . " kB";
+			// echo "Upload: " . $fileName . "<br>";
+			// echo "Type: " . $_FILES["file"]["type"] . "<br>";
+			// echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+			// echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
 			if (file_exists("images/listings/".$addressFile."/" .$fileName)){
-				echo $_FILES["file"]["name"] . " already exists. ";
+				$errors =  $_FILES["file"]["name"] . " already exists. ";
+				$image="images/listings/".$addressFile."/" .$fileName;
+				$invalid = 'invalid';
 			}else{
-				mkdir("images/listings/".$addressFile."/");
+				if(file_exists("images/listings/".$addressFile."/")){
+					//echo 'file exist';
+				}else{
+					mkdir("images/listings/".$addressFile."/");
+				}
 				move_uploaded_file($_FILES["file"]["tmp_name"],
 				"images/listings/".$addressFile."/" . $fileName);
-				echo "Stored in: " . "images/listings/".$addressFile."/" . $fileName;
+				$errors = "Image ".$addressFile."/". $fileName . " Image was Saved properly.";
 				$image="images/listings/".$addressFile."/" .$fileName;
+				$final_image = scaleImageFileToBlob($image,$image);
 			}
 		}
 	}else{
-		echo "Invalid file";
-		
-
+		if($_FILES['file']['tmp_name']){
+			$errors = "File Possibly to Large must be smaller then 5Megabites(5MB).";
+		}else{
+			$errors = "No photo was submitted.";
+		}
 	}
-}
-
-	if(isset($_POST['submit'])){
-		$id=$_GET['id'];
-		$type= mysql_prep($_POST["type"]);
-		$address = mysql_prep($_POST["address"]);
-		$city = mysql_prep($_POST["city"]);
-		$county = mysql_prep($_POST["county"]);
-		$zip = $_POST["zip"];
-		$region = mysql_prep($_POST["region"]);
-		$price = $_POST["price"];
-		$bedrooms = mysql_prep($_POST["bedrooms"]);
-		$bathrooms = mysql_prep($_POST["bathrooms"]);
-		$schools = mysql_prep($_POST["school_dist"]);
-		$sq_ft = mysql_prep($_POST["sq_ft"]);
-		$lot = mysql_prep($_POST["lot_size"]);
-		$year = mysql_prep($_POST["year_built"]);
-		$hoa = $_POST["hoa"];
-		$taxes = mysql_prep($_POST["taxes"]);
-		$status = $_POST["status"];
-		$full_desc = mysql_prep($_POST["full_desc"]);
-		$visible = $_POST["visible"];
-		$perAc = $_POST["perAc"];
 
 		
-
 
 		$query  = "UPDATE listings SET ";
 		$query .= "type = '{$type}', address = '{$address}', city = '{$city}', county = '{$county}', zip = {$zip}, region = '{$region}', price = {$price}, ";
@@ -81,22 +91,30 @@ if (isset($_POST['submit'])) {
 			if(file_exists("images/listings/".$addressFile."/")){
 
 			}else{
-				$image= null;
+				$image= "images/nophoto.jpg";
 				$query .= ", imageLocation = '${image}' ";
 			}
 		}
 		$query .= " WHERE id = {$id} ";
 		$query .= "LIMIT 1 ";
-		$result = mysqli_query($db, $query);
+		if(isset($image)){
+			$result = mysqli_query($db, $query);
+		}else{
+			if(file_exists("images/listings/".$addressFile."/")){
+				$result = mysqli_query($db, $query);
+			}else{
+			$result= null;
+			}
+		}
 		if ($result && mysqli_affected_rows($db) >= 0 ){
-			$changed = "Changes Saved.";
+			$changed = "All Changes Saved.";
 		}else{
 			$errors = "Nothing was changed or there was an error.".mysqli_error($db);
 		}
 
-	}else{
+}else{
 	
-	}
+}
 
  ?>
 
@@ -217,7 +235,7 @@ if (isset($_POST['submit'])) {
 						<p>Full Description*:
 							<textarea name="full_desc" placeholder="Full Description of Property listing." rows="10" cols="75"><?php echo $full_desc ?></textarea>
 						</p>
-						<p>Main Image:<input type="file" name="file" id='image' ></p>
+						<p>*Main Image:<input type="file" name="file" id='image' ></p>
 						<p>Status:
 							<select name="status" id="status" data-role="slider">
 								<option value="1" <?php if($status == 1){ echo 'selected'; } ?>>Open</option>

@@ -17,7 +17,7 @@
 		<div >
 			<fieldset class="form">
 				<h2>New Listing</h2>
-					<form action="create_listing1.0.php" method="post" enctype="multipart/form-data">
+					<form action="create_listing.php" method="post" enctype="multipart/form-data">
 						<p>* = Required Fields</p>
 						<?php echo message(); ?>
 						<p>Type:

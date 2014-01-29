@@ -5,63 +5,7 @@
 	confirm_logged_in();
 ?> 
 <?php 
-//define a maxim size for the uploaded images in Kb
- define ("MAX_SIZE","10000"); 
-  
-//This function reads the extension of the file. It is used to determine if the file  is an image by checking the extension.
- function getExtension($str) {
-		 $i = strrpos($str,".");
-		 if (!$i) { return ""; }
-		 $l = strlen($str) - $i;
-		 $ext = substr($str,$i+1,$l);
-		 return $ext;
- }
-  
-//This variable is used as a flag. The value is initialized with 0 (meaning no error  found)  
-//and it will be changed to 1 if an errro occures.  
-//If the error occures the file will not be uploaded.
- $errors=0;
-//checks if the form has been submitted
-if(isset($_POST['Submit'])){
-	//reads the name of the file the user submitted for uploading
-	$image=$_FILES['image']['name'];
-	//if it is not empty
-	if ($image) {
-	//get the original name of the file from the clients machine
-		$filename = stripslashes($_FILES['image']['name']);
-	//get the extension of the file in a lower case format
-		$extension = getExtension($filename);
-		$extension = strtolower($extension);
-	//if it is not a known extension, we will suppose it is an error and will not  upload the file,  
-	//otherwise we will do more tests
-		if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
-			//print error message
-				echo '<h1>Unknown extension!</h1>';
-				$errors=1;
-		}else{
-			//get the size of the image in bytes
-			//$_FILES['image']['tmp_name'] is the temporary filename of the file
-			//in which the uploaded file was stored on the server
-			$size=filesize($_FILES['image']['tmp_name']);
-			//compare the size with the maxim size we defined and print error if bigger
-			if ($size > MAX_SIZE*1024){
-				echo '<h1>You have exceeded the size limit!</h1>';
-				echo "Type: " . $_FILES["image"]["type"] . "<br>";
-				echo "Size: " . $_FILES["image"]["size"] . " kB<br>";
-				echo "Temp file: " . $_FILES["image"]["tmp_name"] . "<br>";
-				$errors=1;
-			}else{
-			//the new name will be containing the full path where will be stored (images folder)
-			$temp=resizeImage($_FILES['image']['tmp_name'],512,384);
-			$imgfile="upload/".$image;
-			imagejpeg ( $temp, null, 20 );
-			}
-		}
-	}else{
-		echo "<h1>Select Image File</h1>";
-		$errors=1;
-	}
-}
+
 if(isset($_POST['submit'])){
 	$type= mysql_prep($_POST["type"]);
 	$address = mysql_prep($_POST["address"]);
@@ -82,7 +26,44 @@ if(isset($_POST['submit'])){
 	$full_desc = mysql_prep($_POST["full_desc"]);
 	$visible = $_POST["visible"];
 	$perAc = $_POST["perAc"];
-	$image = null;
+	
+	$addressFile = str_replace(" ", "-", $address);
+	$fileName = str_replace(" ", "-", $_FILES['file']['name']);
+	$allowedExts = array("gif", "jpeg", "jpg","JPG", "png");
+	$temp = explode(".", $_FILES["file"]["name"]);
+	$extension = end($temp);
+	if ((($_FILES["file"]["type"] == "image/gif")
+	|| ($_FILES["file"]["type"] == "image/jpeg")
+	|| ($_FILES["file"]["type"] == "image/jpg")
+	|| ($_FILES["file"]["type"] == "image/JPG")
+	|| ($_FILES["file"]["type"] == "image/pjpeg")
+	|| ($_FILES["file"]["type"] == "image/x-png")
+	|| ($_FILES["file"]["type"] == "image/png"))
+	&& ($_FILES["file"]["size"] < 5000000)
+	&& in_array($extension, $allowedExts)){
+		if ($_FILES["file"]["error"] > 0){
+			//echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
+		}else{
+			echo "Upload: " . $fileName . "<br>";
+			echo "Type: " . $_FILES["file"]["type"] . "<br>";
+			echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+			echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
+			if (file_exists("images/listings/".$addressFile."/" .$fileName)){
+				//echo $_FILES["file"]["name"] . " already exists. ";
+			}else{
+				mkdir("images/listings/".$addressFile."/",0777);
+
+				move_uploaded_file($_FILES["file"]["tmp_name"],
+				"images/listings/".$addressFile."/" . $fileName);
+				//echo "Stored in: " . "images/listings/".$addressFile."/" . $fileName;
+				$image="images/listings/".$addressFile."/" .$fileName;
+				$final_image = scaleImageFileToBlob($image,$image);
+				//$final_image = base64_encode($final_image);
+			}
+		}
+	}else{
+		//echo "Invalid file";
+	}
 
 	$query  = "INSERT INTO listings (";
 	$query .= " type, address, city, county, zip, region, price, bedrooms, bathrooms, school_dist, sq_ft, lot_size, year_built, hoa, taxes, status, full_desc, imageLocation, visible, perAc ";

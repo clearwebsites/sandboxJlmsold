@@ -1,8 +1,8 @@
 <?php
 	//create a database connection
 	$dbhost = "127.0.0.1";
-	$dbuser = "root";
-	$dbpass = "odie8987";
+	$dbuser = "jlmartin";
+	$dbpass = "23cFr$13";
 	$dbname = "jlmartin";
 	$db = mysqli_connect($dbhost, $dbuser, $dbpass,$dbname);
 	if (mysqli_connect_errno()) {

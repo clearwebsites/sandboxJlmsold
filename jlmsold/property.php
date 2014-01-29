@@ -51,23 +51,14 @@
 					$full_desc = $row["full_desc"];
 					$img = $row["imageLocation"];
 					$perAc = $row["perAc"];
-					$visible = $row['visible']
-					
+					$visible = $row['visible']		
 			?>		
 		</div>
 		<div id="itemInfo">			
 			<fieldset id="descImg">
 				<a href="listings.php?type=<?php echo urlencode($type) ?> " class='back'>Back</a>&nbsp;|
 				<a title="Print Screen" alt="Print Screen" onclick="window.print();" target="_blank" style="cursor:pointer;" media="print" class="print">&nbsp;Print</a>
-				
-				<?php 
-					// now try it
-					$ua=getBrowser();
-					$yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
-					//print_r($yourbrowser);
-					if($ua['name']== "Internet Explorer"){
-						echo $yourbrowser;
-						?><div class="fotorama" data-nav="thumbs" data-width="500" data-ratio="16/9" data-allowfullscreen="true">
+						<div class="fotorama" >
 								<?php 
 										if ($img == null){
 											 ?><img src="images/noPhoto.jpg"  class="descImg" width="600px" height= "340px">
@@ -78,25 +69,6 @@
 									 ?>
 							<?php find_all_imagesIE($_GET['id']); ?>
 						</div>
-					<?php }else{ ?>
-						<div class="fotorama" data-nav="thumbs" data-width="500" data-ratio="16/9" data-allowfullscreen="true">
-							<a href="data:image/jpeg;base64, <?php echo $img; ?>" class="imgViewer"  >
-								<?php 
-										if ($img == null){
-											 ?><img src="images/noPhoto.jpg"  class="descImg" width="600px" height= "340px">
-								<?php	}else{ ?> 
-											<img src="<?php echo $img; ?>" class="descImg" >	 
-									<?php
-										};
-									 ?>
-							</a>
-							<?php //set_slideshow($_GET['id'],$ua['name'],$ua['version']); 
-									find_all_imagesIE($_GET['id']);
-							?>
-						</div>
-			<?php 	}; ?>
-
-					
 			</fieldset>
 			<fieldset id="descList">
 				<?php if($zip == 0){ $zip = "Zip: N/A";} ?>
@@ -120,7 +92,7 @@
 				<p class="desc"><?php echo $full_desc ?> </p>
 
 				<!-- this needs php if user isset adn logged in -->
-				<ul>
+				<ul class="print">
 					<?php
 						if($visible == 1 ){
 							$visible = "VIEWABLE";

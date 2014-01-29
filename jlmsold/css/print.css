@@ -1,9 +1,10 @@
 /*main css*/
 body{
 	background-color: #fcf2e4;
+	width: 75%;
 	margin: 2px;
 	margin-top: 2px;
-	padding: 5px;
+	padding: 3px;
 	font-family: "Times New Roman";
 	font-style: bold;
 }
@@ -13,26 +14,29 @@ body{
 
 }
 #mainNav{
-	float: left;
-	margin-top: 5px;
-	margin-left: 350px;
-	margin-bottom: 75px;
-	padding: 0px;
 	display: none;
 }
 
 /*item desc page*/
 #content{
 	width: 100%; 
-	margin-top: 110px; 
+	margin-top: 105px; 
 	float: none;
+}
+fieldset {
+    border: 0;
+}
+#noprint{
+	display: none;
+}
+#print{
+	visibility: ;
 }
 #descImg{
 	float: left;
-	width: 600px;
-	height: 300px;
+	width: 650px;
+	height: 350px;
 	margin-left: 10px;
-
 } 
 .descImg{
 	width:600px;
@@ -42,7 +46,7 @@ body{
 #descList{
 	float: left;
 	display: inline;
-	width: 600px;
+	width: 650px;
 	height: 100%;
 	margin-left: 10px;
 }
@@ -57,42 +61,23 @@ body{
 	top: 0px;
 	
 }
-#owners{
-	position: absolute;
-	right: 20px;
-	display: inline;
-	top: 5px;
-	
-	
-}
-#owners img{
-	display: none;
-}
 #footer{
-
+	width: 100%;
 	display: inline;
 }
 /*.footer{
 	width: 200px;
 }*/
 #footer fieldset{
-	
 	border: none;
 	display: inline;
-	width: 95%;
+	width: 100%;
 	margin-top: 10px;
 }
 #footerInfo{
-	
 	position: relative;
 	left: 5px;
 	bottom: 10px;
-}
-#footer img{
-	
-	float: left;
-	padding-top: 2px;
-	margin-left: 10px;
 }
 #jFoot{
 	
@@ -111,14 +96,14 @@ body{
 	position: absolute;
 	width: 85px; height: 40px;
 	margin: 5px;
-	right: 40px;
+	right: 5px;
 
 }
 #equalimg{
 	position: absolute;
 	width: 75px; height: 50;
 	margin: 5px;
-	right: 150px;
+	right: 100px;
 }
 .back{
 	display: none;
@@ -126,7 +111,25 @@ body{
 .print{
 	display: none;
 }
+#noprint{
+	display: none;
+}
 
 #more{
+	display: none;
+}
+.manageMenu{
+	display: none;
+}
+.adminMenu{
+	display: none;
+}
+.delete:link{
+	display: none;
+}
+.edit:link{
+	display: none;
+}
+.addPhotos:link{
 	display: none;
 }

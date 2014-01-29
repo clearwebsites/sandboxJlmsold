@@ -102,12 +102,15 @@ a:hover{
 #side{
 	position: absolute;
 	top: 300px;
-	display: none;
+	display: block;
 	text-align: center;
 	padding: 5px;
 	width: 300px;
 }
 #printside{
+	display: none;
+}
+.showPrint{
 	display: none;
 }
 
@@ -140,10 +143,10 @@ a:hover{
 }
 
 /*item desc page*/
- 
+
 #descImg{
 	float: left;
-	width: 500px;
+	width: 500px; 
 	height: 375px;
 	margin-left: 375px;
 

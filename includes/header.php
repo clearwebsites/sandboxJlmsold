@@ -7,21 +7,16 @@
 		<meta name="viewport" content="user-scalable=no, width=device-width" />
 		<title>Martin Real Estate </title>
 		<!-- css -->
-		
+		<link rel="shortcut icon" href=".\favicon.ico">
 		<link rel="stylesheet" type="text/css" href="css/main.css"> 
 		<link rel="stylesheet" type="text/css" href="css/print.css" media="print">
-		
+		<link  href="http://fotorama.s3.amazonaws.com/4.4.9/fotorama.css" rel="stylesheet"> <!-- 3 KB -->
+
 		
 		<!-- jquery -->
-		<!-- Magnific Popup core CSS file -->
-		<!-- <link rel="stylesheet" href="magnific-popup/magnific-popup.css">  -->
 
 		<!-- jQuery 1.7.2+ or Zepto.js 1.0+ -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
-
-		<!-- Magnific Popup core JS file -->
-		<!--<script src="magnific-popup/jquery.magnific-popup.js"></script> -->
-		<link  href="http://fotorama.s3.amazonaws.com/4.4.9/fotorama.css" rel="stylesheet"> <!-- 3 KB -->
 		<script src="http://fotorama.s3.amazonaws.com/4.4.9/fotorama.js"></script> <!-- 15 KB -->
 		<script src="js/main.js"></script> 
 		

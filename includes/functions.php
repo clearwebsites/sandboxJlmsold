@@ -133,7 +133,7 @@
 		//echo $image_set;
 		while ($row =  mysqli_fetch_assoc($image_set)) {
 			$listingID = $row["listingID"];
-			$img = base64_encode( $row['img'] );
+			//$img = base64_encode( $row['img'] );
 			$imgLocation = $row["fileLocation"];
 			echo  "<img src=". $imgLocation . "  > ";
 		}
@@ -242,32 +242,69 @@
 		}
 	}
 
-function resizeImage($imgSrc,$thumbnail_width,$thumbnail_height) { //$imgSrc is a FILE - Returns an image resource.
-    //getting the image dimensions  
-    list($width_orig, $height_orig) = getimagesize($imgSrc);   
-    $myImage = imagecreatefromjpeg($imgSrc);
-    $ratio_orig = $width_orig/$height_orig;
-      
-    if ($thumbnail_width/$thumbnail_height > $ratio_orig) {
-       $new_height = $thumbnail_width/$ratio_orig;
-       $new_width = $thumbnail_width;
-    } else {
-       $new_width = $thumbnail_height*$ratio_orig;
-       $new_height = $thumbnail_height;
+function scaleImageFileToBlob($file, $location) {
+
+    $source_pic = $file;
+    $max_width = 1024;
+    $max_height = 768;
+
+    list($width, $height, $image_type) = getimagesize($file);
+
+    switch ($image_type)
+    {
+        case 1: $src = imagecreatefromgif($file); break;
+        case 2: $src = imagecreatefromjpeg($file);  break;
+        case 3: $src = imagecreatefrompng($file); break;
+        default: return '';  break;
     }
-      
-    $x_mid = $new_width/2;  //horizontal middle
-    $y_mid = $new_height/2; //vertical middle
-      
-    $process = imagecreatetruecolor(round($new_width), round($new_height)); 
-      
-    imagecopyresampled($process, $myImage, 0, 0, 0, 0, $new_width, $new_height, $width_orig, $height_orig);
-    $thumb = imagecreatetruecolor($thumbnail_width, $thumbnail_height); 
-    imagecopyresampled($thumb, $process, 0, 0, ($x_mid-($thumbnail_width/2)), ($y_mid-($thumbnail_height/2)), $thumbnail_width, $thumbnail_height, $thumbnail_width, $thumbnail_height);
-  
-    imagedestroy($process);
-    imagedestroy($myImage);
-    return $thumb;
+
+    $x_ratio = $max_width / $width;
+    $y_ratio = $max_height / $height;
+
+    if( ($width <= $max_width) && ($height <= $max_height) ){
+        $tn_width = $width;
+        $tn_height = $height;
+        }elseif (($x_ratio * $height) < $max_height){
+            $tn_height = ceil($x_ratio * $height);
+            $tn_width = $max_width;
+        }else{
+            $tn_width = ceil($y_ratio * $width);
+            $tn_height = $max_height;
+    }
+
+    $tmp = imagecreatetruecolor($tn_width,$tn_height);
+
+    /* Check if this image is PNG or GIF, then set if Transparent*/
+    if(($image_type == 1) OR ($image_type==3))
+    {
+        imagealphablending($tmp, false);
+        imagesavealpha($tmp,true);
+        $transparent = imagecolorallocatealpha($tmp, 255, 255, 255, 127);
+        imagefilledrectangle($tmp, 0, 0, $tn_width, $tn_height, $transparent);
+    }
+    imagecopyresampled($tmp,$src,0,0,0,0,$tn_width, $tn_height,$width,$height);
+
+    /*
+     * imageXXX() only has two options, save as a file, or send to the browser.
+     * It does not provide you the oppurtunity to manipulate the final GIF/JPG/PNG file stream
+     * So I start the output buffering, use imageXXX() to output the data stream to the browser, 
+     * get the contents of the stream, and use clean to silently discard the buffered contents.
+     */
+    ob_start();
+
+    switch ($image_type)
+    {
+        case 1: imagegif($tmp); break;
+        case 2: imagejpeg($tmp, $location, 60);  break; // best quality
+        case 3: imagepng($tmp, NULL, 0); break; // no compression
+        default: echo ''; break;
+    }
+
+    $final_image = ob_get_contents();
+
+    ob_end_clean();
+    
+    return $final_image;
 }
 
 function deleteIMG($id){

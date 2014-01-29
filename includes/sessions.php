@@ -15,7 +15,9 @@
 	function errors() {
 		if (isset($_SESSION["errors"])) {
 			$errors = $_SESSION["errors"];
-			
+			$output = "<div class=\"errors\">";
+    		$output .= htmlentities($_SESSION['errors']);
+    		$output .= "</div>";
 			// clear message after use
 			$_SESSION["errors"] = null;
 			
